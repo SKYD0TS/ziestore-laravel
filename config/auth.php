@@ -41,7 +41,7 @@ return [
             'provider' => 'staff',
         ],
         'api' => [
-            'driver' => 'token',
+            'driver' => 'sanctum',
             'provider' => 'staff',
         ],
     ],
@@ -66,13 +66,8 @@ return [
     'providers' => [
         'staff' => [
             'driver' => 'eloquent',
-            'model' => App\Models\Staff::class,
+            'model' => App\Models\User\Staff::class,
         ],
-
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
     ],
 
     /*

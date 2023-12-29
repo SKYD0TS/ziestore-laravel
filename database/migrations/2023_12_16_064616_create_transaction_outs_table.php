@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('customer_code');
             $table->string('staff_code');
             $table->unsignedBigInteger('payment_type_id');
-            $table->decimal('total', 12, 2);
+            $table->decimal('total', 12, 2)->default(0);
             $table->enum('status', ['in progress', 'on hold', 'done']);
             $table->foreign('customer_code')->references('customer_code')->on('customers');
             $table->foreign('staff_code')->references('staff_code')->on('staff');

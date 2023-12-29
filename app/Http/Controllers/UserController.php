@@ -9,13 +9,7 @@ use Illuminate\Support\Facades\Validator;
 
 class UserController extends CrudController
 {
-    /**
-     * Show the form for creating a new resource.
-     */
-    // public function create()
-    // {
-    //     //
-    // }
+    protected $modelPath = "App\\Models\\User\\";
 
     /**
      * Store a newly created resource in storage.

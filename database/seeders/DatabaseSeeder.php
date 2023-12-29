@@ -16,13 +16,13 @@ class DatabaseSeeder extends Seeder
         $barcode = new Barcode();
         // \App\Models\User::factory(10)->create();
 
-        if (!(\App\Models\Staff::find('00admin00'))) {
-            \App\Models\Staff::create([
-                'staff_code' => '00admin00',
+        if (!(\App\Models\User\Staff::find('00admin00'))) {
+            \App\Models\User\Staff::create([
+                'staff_code' => 'O2312171034',
                 'name' => 'admin',
                 'email' => 'admin@admin.com',
                 'role' => 'owner',
-                'password' => 'password',
+                'password' => bcrypt('password'),
             ]);
 
             \App\Models\Unit::create([

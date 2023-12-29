@@ -7,8 +7,49 @@ use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
+/**
+ * TODO: Fix try catch Model binding exception duplications
+ */
 class CrudController extends Controller
 {
+    protected $modelPath = "App\\Models\\";
+    protected function getModel($model)
+    {
+        try {
+            return app($this->modelPath . $model);
+        } catch (BindingResolutionException $e) {
+            return response()->json(['error' => 'Invalid model']);
+        }
+    }
+
+    // /**
+    //  * Get select options for select input
+    //  * GET
+    //  */
+    // public function getSelectOptions(string $model)
+    // {
+    //     try {
+    //         $Model = $this->getModel($model);
+    //         return $Model->getSelectOptions();
+    //     } catch (BindingResolutionException $e) {
+    //         return response()->json(['error' => 'Invalid model']);
+    //     }
+    // }
+
+    /**
+     * Return input attributes of columns
+     * GET
+     */
+    public function getInputAttributes(string $model)
+    {
+        try {
+            $model = app("App\\Models\\$model");
+            return response()->json(['inputs' => $model->getColumnsInputAttribute()]);
+        } catch (BindingResolutionException $e) {
+            return response()->json(['error' => 'Invalid model']);
+        }
+    }
+
     /**
      * Display a listing of the resource.
      * GET
@@ -16,17 +57,17 @@ class CrudController extends Controller
     public function index(string $model, Request $request)
     {
         try {
-            $model = app("App\\Models\\$model");
+            $Model = $this->getModel($model);
             //Code v
 
             $perPage = $request->input('per_page', 50); // Set a default value or configure as needed
             $page = $request->input('page', 1);
 
-            $query = $model::query();
+            $query = $Model::query();
             $results = $query->paginate($perPage, ['*'], 'page', $page);
             return response()->json($results);
         } catch (BindingResolutionException $e) {
-            return 'invalid model';
+            return response()->json(['error' => 'invalid model']);
         }
     }
 
@@ -44,7 +85,7 @@ class CrudController extends Controller
     public function store(string $model, Request $request)
     {
         try {
-            $Model = app("App\\Models\\$model");
+            $Model = $this->getModel($model);
             //Code v
             //get model rule
             $rule = $Model->getRules();
@@ -58,7 +99,7 @@ class CrudController extends Controller
             $Model->create($validator->validated());
             return response()->json(['success' => 'Success']);
         } catch (BindingResolutionException $e) {
-            return 'invalid model';
+            return response()->json(['error' => 'invalid model']);
         }
     }
 
@@ -68,14 +109,14 @@ class CrudController extends Controller
     public function show(string $model, string $id)
     {
         try {
-            $Model = app("App\\Models\\$model");
+            $Model = $this->getModel($model);
             //Code v
             $item = $Model::findOr($id, function () use ($model) {
                 return response()->json(['error' => ucfirst($model) . " Not found"]);
             });
             return $item;
         } catch (BindingResolutionException $e) {
-            return 'invalid model';
+            return response()->json(['error' => 'invalid model']);
         }
     }
 
@@ -93,7 +134,7 @@ class CrudController extends Controller
     public function update(string $model, Request $request, string $id)
     {
         try {
-            $Model = app("App\\Models\\$model");
+            $Model = $this->getModel($model);
             //Code v
             $item = $Model::find($id);
             if ($item == null) {
@@ -110,7 +151,7 @@ class CrudController extends Controller
 
             return response()->json(['success' => 'Success']);
         } catch (BindingResolutionException $e) {
-            return response()->json(['error' => 'Invalid model'], 404);
+            return response()->json(['error' => 'invalid model']);
         }
     }
 
@@ -120,7 +161,7 @@ class CrudController extends Controller
     public function destroy(string $model, string $id)
     {
         try {
-            $Model = app("App\\Models\\$model");
+            $Model = $this->getModel($model);
             //Code v
 
             $item = $Model->find($id);
@@ -130,7 +171,7 @@ class CrudController extends Controller
             $item->delete();
             return response()->json(['success' => 'Success']);
         } catch (BindingResolutionException $e) {
-            return 'invalid model';
+            return response()->json(['error' => 'invalid model']);
         }
     }
 }

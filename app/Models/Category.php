@@ -11,9 +11,13 @@ class Category extends Model
 
     protected $guarded = ['id'];
 
-    protected $rules = [
-        'name' => 'required|unique:App\Models\Category,name'
+    protected $columns = [
+        'name' => [
+            'rule' => 'required|unique:App\Models\Category,name',
+            'inputAttributes' => ['type' => 'text', 'label' => 'Name', 'name' => 'name'],
+        ]
     ];
+
     protected $uniqueColumn = ['name'];
 
     public function products()

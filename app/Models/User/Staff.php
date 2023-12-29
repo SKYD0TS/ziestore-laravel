@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\User;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -11,7 +11,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 class Staff extends Authenticatable
 {
-    use HasApiTokens, HasFactory, ModelTrait, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, ModelTrait;
 
     protected $primaryKey = 'staff_code';
     protected $guarded = [];

@@ -10,8 +10,12 @@ class PaymentType extends Model
     use HasFactory, ModelTrait;
     protected $guarded = ['id'];
 
-    protected $rules = [
-        'name' => 'required|unique:App\Models\PaymentType,name'
+    protected $columns = [
+        'name' => [
+            'rule' => 'required|unique:App\Models\PaymentType,name',
+            'inputAttributes' => ['type' => 'text', 'label' => 'Name', 'name' => 'name'],
+        ]
     ];
+
     protected $uniqueColumn = ['name'];
 }

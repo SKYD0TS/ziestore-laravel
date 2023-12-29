@@ -8,13 +8,38 @@ namespace App\Models;
  */
 trait ModelTrait
 {
+    public function getSelectOptions()
+    {
+        return $this->all()->pluck('name', 'id');
+    }
+
     public function getRules($id = null)
     {
+        $columns = $this->columns;
+
         if ($id !== null) {
-            foreach ($this->uniqueColumn as $key => $column) {
-                $this->rules[$column] .= ',' . $id;
+            foreach ($columns as $key => $column) {
+                if (!null == strpos($column['rule'], 'unique:')) {
+                    $columns['rule'][$column] .= ',' . $id;
+                }
             }
         }
-        return $this->rules;
+
+        $columnsRule = array_map(function ($column) {
+            return $column['rule'];
+        }, $columns);
+
+        return $columnsRule;
+    }
+
+    public function getColumnsInputAttribute()
+    {
+        $columns = $this->columns;
+
+        $columnsAttribute = array_map(function ($column) {
+            return $column['inputAttributes'];
+        }, $columns);
+
+        return $columnsAttribute;
     }
 }

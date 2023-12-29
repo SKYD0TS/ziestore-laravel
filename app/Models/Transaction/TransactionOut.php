@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Transaction;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class TransactionDetailOut extends Model
+class TransactionOut extends Model
 {
     use HasFactory;
 }

@@ -16,20 +16,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('csrf-token', function () {
-    return response()->json(['csrf_token'=>csrf_token()]);
-});
-
-Route::post('test', function () {
-    return response()->json(['message' => 'Hello World!']);
-});
-
-Route::post('auth/get-token', [AuthController::class, 'getToken']);
 Route::post('auth/login', [AuthController::class, 'login']);
 Route::post('auth/logout', [AuthController::class, 'logout']);
 
 Route::group(['middleware' => ['auth:sanctum', 'role:cashier|owner']], function () {
-    Route::resource('transaction/{type}', TransactionController::class)->parameter('{type}', 'id');
+    Route::resource('transaction/{model}/{type}', TransactionController::class)->parameter('{type}', 'id');
 });
 
 Route::group(['middleware' => ['auth:sanctum', 'role:operator|owner']], function () {
@@ -39,6 +30,8 @@ Route::group(['middleware' => ['auth:sanctum', 'role:operator|owner']], function
 Route::group(['middleware' => ['auth:sanctum', 'role:cashier|operator|owner']], function () {
     Route::resource('model/{model}', CrudController::class)->parameter('{model}', 'id');
 });
+Route::get('model/{model}/get-input-attributes', [CrudController::class, 'getInputAttributes']);
+
 
 // Route::get('/transaction/in/{transaction_code}', [TransactionInController::class, 'show']);
 // 
